@@ -1,25 +1,42 @@
-# IP Scanner
+# Honeypot
 
-Este é um código Python para escanear o IP de uma máquina com base no nome da máquina. Ele utiliza a biblioteca `xml.etree.ElementTree` para manipular elementos XML, a biblioteca `subprocess` para iniciar processos e a biblioteca `argparse` para processar argumentos de linha de comando.
+Este é um código simples de um honeypot escrito em Python que recebe conexões de clientes em uma determinada porta TCP e registra informações sobre essas conexões em um arquivo de log.
 
 ## Funcionamento
-1. A função `get_ip(nome_maquina)` é responsável por implementar a lógica para obter o IP com base no nome da máquina. No entanto, a função atualmente está vazia (`pass`), ou seja, não há implementação específica para essa lógica. Você precisará adicionar a lógica necessária para obter o IP da máquina com base no nome fornecido.
-2. A classe `Scanner` é definida, mas atualmente está vazia (`pass`). Você pode adicionar métodos e atributos adicionais a essa classe para implementar a lógica de escaneamento do IP ou qualquer outra funcionalidade desejada.
-3. No bloco `if __name__ == '__main__':`, é instanciado um objeto `Scanner` chamado `scanner`. Essa linha será executada apenas se o arquivo Python for executado diretamente, não se for importado como um módulo.
-4. É impressa a mensagem "Olá" no console. Isso serve apenas como um exemplo de saída para verificar se o código está sendo executado corretamente.
+1. O código cria um socket TCP para esperar por conexões de clientes.
+2. Ao receber uma conexão, é iniciada uma thread separada para lidar com esse cliente.
+3. A função `acao_cliente` é executada na nova thread, que realiza as seguintes etapas:
+   - Registra a informação da conexão no arquivo de log.
+   - Envia uma mensagem de boas-vindas ao cliente.
+   - Entra em um loop para receber dados do cliente.
+   - Registra os dados recebidos no arquivo de log.
+   - Chama a função `analise_trafego` para realizar análise de tráfego com os dados recebidos.
+   - Envia uma mensagem de agradecimento ao cliente.
+   - Fecha a conexão com o cliente.
+4. A função `analise_trafego` é uma função de espaço reservado para implementação personalizada de análise de tráfego. Você pode adicionar sua lógica de análise nessa função, como verificar padrões específicos, extrair informações relevantes, etc.
+5. O código principal inicia o honeypot na porta 8080 chamando a função `honeypot`.
+
+## Registro de Log
+As informações das conexões recebidas são registradas em um arquivo de log chamado "honeypot_log.txt". O arquivo é aberto em modo de anexação (`"a"`) para que as informações sejam adicionadas ao final do arquivo a cada nova conexão recebida. O formato das informações registradas é o seguinte:
+
+```
+Conexão recebida de {IP}:{PORTA} em {DATA_HORA}
+Dados recebidos de {IP}:{PORTA} em {DATA_HORA}:
+{DADOS_RECEBIDOS}
+```
+
+Onde:
+- `{IP}`: Endereço IP do cliente que se conectou.
+- `{PORTA}`: Porta do cliente que se conectou.
+- `{DATA_HORA}`: Data e hora da conexão ou recebimento dos dados.
+- `{DADOS_RECEBIDOS}`: Dados recebidos do cliente.
+
+## Análise de Tráfego
+A função `analise_trafego` é um espaço reservado para realizar a análise de tráfego com os dados recebidos dos clientes. Atualmente, a função está vazia (`pass`), o que significa que não há implementação específica para análise. Você pode adicionar sua lógica personalizada nessa função para realizar análises mais avançadas de pacotes de rede, verificar padrões específicos nos dados recebidos, extrair informações relevantes ou qualquer outra lógica desejada.
 
 ## Uso
-Para utilizar o código, você pode adicionar a lógica necessária dentro da função `get_ip(nome_maquina)` para obter o IP com base no nome da máquina. Além disso, você pode estender a classe `Scanner` adicionando métodos e atributos para implementar funcionalidades adicionais.
+Para executar o honeypot, você pode simplesmente rodar o código. Ele será executado na porta 8080. Certifique-se de ter as permissões adequadas para abrir uma conexão nessa porta. O honeypot ficará aguardando conexões de clientes, registrando as informações relevantes em um arquivo de log e realizando uma análise de tráfego básica.
 
-Certifique-se de ter as dependências corretas instaladas, como as bibliotecas `xml.etree.ElementTree` e `subprocess`. Você pode instalá-las utilizando o gerenciador de pacotes Python, como o `pip`.
+**Observação:** Este código é um exemplo básico e não implementa todas as funcionalidades necessárias para um honeypot completo e seguro. É importante ter cuidado ao executar um honeypot em um ambiente de
 
-Após adicionar sua lógica personalizada, você pode executar o arquivo Python diretamente para testar o código. Certifique-se de que seu ambiente Python esteja configurado corretamente.
-
-```
-python arquivo.py
-```
-
-A mensagem "Olá" será impressa no console como uma confirmação de que o código está sendo executado.
-
-## Observação
-Este código é fornecido como um exemplo básico e não implementa toda a funcionalidade necessária para um scanner de IP completo. Você precisará adicionar a lógica personalizada adequada para obter o IP com base no nome da máquina e implementar outras funcionalidades desejadas no scanner.
+ produção, pois pode apresentar riscos de segurança.
