@@ -33,33 +33,26 @@ def acao_cliente(client_socket, client_address):
     client_socket.close()
 
 def analise_trafego(data):
-    # Implemente sua lógica de análise de tráfego aqui
-    # Por exemplo, você pode verificar padrões específicos, extrair informações relevantes, etc.
-    # Você pode usar bibliotecas como Scapy para análise mais avançada de pacotes de rede.
+    
     pass
 
 def honeypot(port):
-    # Crie um socket TCP
+    #socket TCP
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
-    # Defina a opção de reutilização do endereço para permitir a rápida reinicialização
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    
-    # Associe o socket ao endereço localhost e à porta especificada
+
     server_socket.bind(('localhost', port))
-    
-    # Aguarde por conexões
+   
     server_socket.listen(5)
     
     print(f"Aguardando conexões na porta {port}...")
     
     while True:
-        # Aceite a conexão de um cliente
+        
         client_socket, client_address = server_socket.accept()
         
-        # Inicie uma thread para lidar com o cliente
         client_thread = threading.Thread(target=acao_cliente, args=(client_socket, client_address))
         client_thread.start()
 
-# Execute o honeypot na porta 8080
 honeypot(8080)
